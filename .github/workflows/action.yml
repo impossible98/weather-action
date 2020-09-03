@@ -1,0 +1,36 @@
+name: GitHub Actions Weather Bot
+
+on:
+  push:
+
+  schedule:
+    - cron: "0 21 * * *"
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Get Weather
+        run: |
+          python src/main.py
+      - name: Get Date
+        run: |
+          echo "::set-env name=REPORT_DATE::$(TZ=':Asia/Shanghai' date '+%Y-%m-%d %T')"
+      - name: Send mail
+        uses: dawidd6/action-send-mail@master
+        with:
+          server_address: smtp.office365.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: 上海天气预报 (${{env.REPORT_DATE}})
+          body: file://dist/result.txt
+          to: yangjianqin0813@163.com
+          from: GitHub Actions
+          content_type: text/plain
