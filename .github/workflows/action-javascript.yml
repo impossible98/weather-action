@@ -12,13 +12,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v2
+      - name: Set up Node 12.x
+        uses: actions/setup-node@v1
         with:
-          python-version: 3.7
+          node-version: 12.x
       - name: Get Weather
         run: |
-          python src/main.py
+          yarn start
       - name: Get Date
         run: |
           echo "::set-env name=REPORT_DATE::$(TZ=':Asia/Shanghai' date '+%Y-%m-%d %T')"

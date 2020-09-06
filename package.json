@@ -1,0 +1,10 @@
+{
+  "name": "weather-action",
+  "version": "1.0.0",
+  "repository": "https://github.com/impossible98/weather-action.git",
+  "author": "impossible98 <ago2chris@outlook.com>",
+  "license": "MIT",
+  "scripts": {
+      "start": "node src/main.js"
+  }
+}
