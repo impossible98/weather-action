@@ -1,27 +1,27 @@
-const fs = require('fs');
-const https = require('https');
-const path = require('path');
+import * as fs from 'fs';
+import * as https from 'https';
+import * as path from 'path';
+import * as procress from 'process';
 
 const BASE_DIR = path.resolve(__dirname);
 const DIST_DIR = path.join(BASE_DIR, '..', 'dist');
-
+// 9ae102ed512aa24b80dc1b650baef463
 
 const options = {
-    "method": "GET",
-    "hostname": "api.openweathermap.org",
-    "path": "/data/2.5/onecall?lat=31.22&lon=121.46&exclude=hourly,minutely&appid=9ae102ed512aa24b80dc1b650baef463&lang=zh_cn"
+    hostname: 'api.openweathermap.org',
+    method: 'GET',
+    path: `/data/2.5/onecall?lat=31.22&lon=121.46&exclude=hourly,minutely&appid=${procress.argv[2]}&lang=zh_cn`,
 };
 
 const req = https.request(options, function (res) {
-    let chunks = [];
+    let chunks: any = [];
 
-    res.on("data", function (chunk) {
+    res.on('data', function (chunk) {
         chunks.push(chunk);
     });
 
-    res.on("end", function () {
-        let body = Buffer.concat(chunks);
-        let result = body.toString();
+    res.once('end', function () {
+        let result: string = Buffer.concat(chunks).toString();
         let max = JSON.parse(result)['daily'][0]['temp']['max'];
         max = (Number(max) - 273.15).toFixed(2);
 
@@ -43,13 +43,7 @@ const req = https.request(options, function (res) {
 
 
         fs.access(DIST_DIR, fs.constants.F_OK, function (error) {
-            fs.mkdir(DIST_DIR, {
-                recursive: true
-            }, function (error) {
-                if (error) {
-                    throw error;
-                }
-            });
+            fs.mkdir(DIST_DIR, function (error) { });
 
             const data = `天气情况：${description}
 最高气温：${max}
@@ -59,18 +53,13 @@ const req = https.request(options, function (res) {
 `;
             console.log(data);
 
-            fs.writeFile('dist/result.txt', data, function (error) {
-                if (error) {
-                    throw error
-                }
-                ;
-                console.log('文件已被保存');
-            });
-
+            fs.writeFile('dist/result.txt', data, function (error) { });
         });
     });
 });
 
 req.end();
+
+
 
 

@@ -18,7 +18,8 @@ jobs:
           node-version: 12.x
       - name: Get Weather
         run: |
-          yarn start
+          yarn compile
+          yarn start ${{ secrets.APPID }}
       - name: Get Date
         run: |
           echo "::set-env name=REPORT_DATE::$(TZ=':Asia/Shanghai' date '+%Y-%m-%d %T')"
