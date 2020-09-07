@@ -18,6 +18,7 @@ jobs:
           node-version: 12.x
       - name: Get Weather
         run: |
+          yarn install
           yarn compile
           yarn start ${{ secrets.APPID }}
       - name: Get Date
