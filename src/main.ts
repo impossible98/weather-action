@@ -5,6 +5,7 @@ import * as procress from 'process';
 
 const BASE_DIR = path.resolve(__dirname);
 const DIST_DIR = path.join(BASE_DIR, '..', 'dist');
+// https://openweathermap.org/api/one-call-api
 // 9ae102ed512aa24b80dc1b650baef463
 
 const options = {
@@ -20,7 +21,7 @@ const req = https.request(options, function (res) {
         chunks.push(chunk);
     });
 
-    res.once('end', function () {
+    res.on('end', function () {
         let result: string = Buffer.concat(chunks).toString();
         let max = JSON.parse(result)['daily'][0]['temp']['max'];
         max = (Number(max) - 273.15).toFixed(2);
